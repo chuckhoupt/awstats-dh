@@ -1,0 +1,3 @@
+[submodule "awstats"]
+	path = awstats
+	url = https://github.com/eldy/awstats
