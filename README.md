@@ -8,9 +8,7 @@ Installation
 ------------
 
 AWStats-DH can be installed anywhere on a web site, and it will generate
-stats for all sites hosted under the same shell user.
-
-To install AWStats-DH on the site `example.com`, SSH login to
+stats for all sites hosted under the same shell user. To install AWStats-DH on the site `example.com`, SSH login to
 the shell user (`ssh user@example.com`), and then perform the following setup.
 
 - **Download**
@@ -18,8 +16,7 @@ the shell user (`ssh user@example.com`), and then perform the following setup.
   Clone AWStats-DH into `example.com`'s web directory:
 
   ```
-  git clone --recurse-submodules https://github.com/chuckhoupt/awstats-dh.git \
-      example.com/awstats-dh
+  git clone --recurse-submodules https://github.com/chuckhoupt/awstats-dh.git example.com/awstats-dh
   ```
 
 - **Build Initial Statistics**
