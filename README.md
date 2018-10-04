@@ -17,7 +17,7 @@ awstats-dh in `example.com`'s web directory.
 ```
 cd example.com
 git clone --recurse-submodules https://github.com/chuckhoupt/awstats-dh.git
-awstats-dh/update all
+awstats-dh/update-awstats all
 ```
 
 Now visit `example.com/awstats-dh/` to see the stats for all sites hosted
