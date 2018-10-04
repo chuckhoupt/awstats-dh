@@ -12,7 +12,20 @@ DATADIR=$BASE/data
 
 mkdir -p $DATADIR
 
-#ls -l $HOME/logs/*/http{,s}/access.log.$(date -I --date=yesterday)
+function write_config {
+	cat > $CONFIG_PATH <<ENDCONFIG
+DirData="$DATADIR"
+Include "$BASE/awstats.common.conf"
+LogFile="$1"
+SiteDomain="$SITE"
+HostAliases="www.$SITE"
+UseHTTPSLinkForUrl="$HTTPSLINKS"
+ENDCONFIG
+	if [[ -f $LOCAL_CONFIG_PATH ]]
+	then
+		cat $LOCAL_CONFIG_PATH >> $CONFIG_PATH
+	fi
+}
 
 for LOG in $HOME/logs/*/http{,s}/access.log
 do
@@ -25,22 +38,16 @@ do
 	esac
 	CONFIG_PATH=$CONFIGDIR/awstats.$CONFIG.conf
 	LOCAL_CONFIG_PATH=$BASE/awstats.$CONFIG.conf
+	LOGALLCMD="zcat -f $HOME/logs/$SITE/$PROTOCOL/access.log.2* $HOME/logs/$SITE/$PROTOCOL/access.log |"
+	LOGDAYCMD="zcat -f $HOME/logs/$SITE/$PROTOCOL/access.log.0 $HOME/logs/$SITE/$PROTOCOL/access.log |"
+
 	case ${1:-all} in
-	all) LOGCMD="zcat -f $HOME/logs/$SITE/$PROTOCOL/access.log.2* $HOME/logs/$SITE/$PROTOCOL/access.log |" ;;
-	day) LOGCMD="zcat -f $HOME/logs/$SITE/$PROTOCOL/access.log.0 $HOME/logs/$SITE/$PROTOCOL/access.log |" ;;
+	all) write_config "$LOGALLCMD" ;;
+	day) write_config "$LOGDAYCMD" ;;
 	esac
-	cat > $CONFIG_PATH <<ENDCONFIG
-DirData="$DATADIR"
-Include "$BASE/awstats.common.conf"
-LogFile="$LOGCMD"
-SiteDomain="$SITE"
-HostAliases="www.$SITE"
-UseHTTPSLinkForUrl="$HTTPSLINKS"
-ENDCONFIG
-	if [[ -f $LOCAL_CONFIG_PATH ]]
-	then
-		cat $LOCAL_CONFIG_PATH >> $CONFIG_PATH
-	fi
 
 	$BASE/awstats/wwwroot/cgi-bin/awstats.pl -configdir=$CONFIGDIR -config=$CONFIG -update
+
+	# Rewrite config with all logs to better support rawlog searches
+	write_config "$LOGALLCMD"
 done
