@@ -14,9 +14,9 @@ mkdir -p $DATADIR
 
 #ls -l $HOME/logs/*/http{,s}/access.log.$(date -I --date=yesterday)
 
-for LOGFILE in $HOME/logs/*/http{,s}/access.log.0
+for LOG in $HOME/logs/*/http{,s}/access.log
 do
-	[[ "$LOGFILE" =~ logs/(.+)/(http|https) ]]
+	[[ "$LOG" =~ logs/(.+)/(http|https) ]]
 	SITE=${BASH_REMATCH[1]}
 	PROTOCOL=${BASH_REMATCH[2]}
 	case $PROTOCOL in
@@ -25,14 +25,14 @@ do
 	esac
 	CONFIG_PATH=$CONFIGDIR/awstats.$CONFIG.conf
 	LOCAL_CONFIG_PATH=$BASE/awstats.$CONFIG.conf
-	if [[ ${1:-} == 'all' ]]
-	then
-		LOGFILE="zcat -f $HOME/logs/$SITE/$PROTOCOL/access.log.2* |"
-	fi
+	case ${1:-all} in
+	all) LOGCMD="zcat -f $HOME/logs/$SITE/$PROTOCOL/access.log.2* $HOME/logs/$SITE/$PROTOCOL/access.log |" ;;
+	day) LOGCMD="zcat -f $HOME/logs/$SITE/$PROTOCOL/access.log.0 $HOME/logs/$SITE/$PROTOCOL/access.log |" ;;
+	esac
 	cat > $CONFIG_PATH <<ENDCONFIG
 DirData="$DATADIR"
 Include "$BASE/awstats.common.conf"
-LogFile="$LOGFILE"
+LogFile="$LOGCMD"
 SiteDomain="$SITE"
 HostAliases="www.$SITE"
 UseHTTPSLinkForUrl="$HTTPSLINKS"
