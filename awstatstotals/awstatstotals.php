@@ -129,6 +129,10 @@ $FilterIgnoreConfigs = $FilterIgnoreConfigs ?: array();
 $sort  = isset($_GET['sort'])  ? preg_replace('/[^_a-z]/', '', $_GET['sort']) : $sort_default;
 $year  = isset($_GET['year'])  ? (int)$_GET['year']  : date('Y');
 $month = isset($_GET['month']) ? (int)$_GET['month'] : date('n');
+$nview = isset($_GET['nview'])  ? $_GET['nview'] : $NotViewed;
+
+$NotViewed = in_array($nview, ['none', 'sum', 'columns']) ? $nview : $NotViewed;
+
 if (!$month) {
     $month = 'all';
 }
@@ -446,6 +450,11 @@ for ($curyear = date('Y'), $i = $curyear - 4; $i <= $curyear; $i++) {
 }
 echo '</select>'."\n";
 ?>
+<select class="f" name="nview">
+<option value="none"<?php echo $nview == 'none' ? ' selected' : '' ?>>Viewed Traffic
+<option value="sum"<?php echo $nview == 'sum' ? ' selected' : '' ?>>Combined Traffic
+<option value="columns"<?php echo $nview == 'columns' ? ' selected' : '' ?>>Detailed Traffic
+</select>
 <input type="submit" class="f" value="<?php echo $message[115]; ?>">
 </td></tr>
 </table>
@@ -454,17 +463,20 @@ echo '</select>'."\n";
 </form>
 
 <table align="center">
-<?php
-if ($NotViewed == 'columns'):
-?>
 <tr>
 <td>&nbsp;
+<?php switch ($NotViewed): 
+case 'none': ?>
+<td class="border" colspan="5"><?php echo $message[160]; ?>
+<?php break; case 'sum': ?>
+<td class="border" colspan="5"><?php echo 'Combined viewed/not-viewed traffic'; ?>
+<?php break; case 'columns': ?>
 <td class="border" colspan="5"><?php echo $message[160]; ?>
 <td class="border" colspan="3"><?php echo $message[161]; ?>
+<?php endswitch; ?>
 <tr>
 <?php
-endif;
-$url = $_SERVER['SCRIPT_NAME']."?month=$month&year=$year&sort=";
+$url = $_SERVER['SCRIPT_NAME']."?month=$month&year=$year&nview=$nview&sort=";
 ?>
 <td bgcolor="#ECECEC" class="l" nowrap>&nbsp;<a href="<?php echo $url; ?>config" class="h"><?php echo $message[7]; ?></a>
 <td width="80" bgcolor="#FFB055"><a href="<?php echo $url; ?>unique" class="h"><?php echo $message[11]; ?></a>
