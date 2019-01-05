@@ -27,7 +27,7 @@ ENDCONFIG
 	fi
 }
 
-for LOG in $HOME/logs/*/http{,s}/access.log
+for LOG in $(find $HOME/logs/*/http{s,}/access.log -mtime -31)
 do
 	[[ "$LOG" =~ logs/(.+)/(http|https) ]]
 	SITE=${BASH_REMATCH[1]}
