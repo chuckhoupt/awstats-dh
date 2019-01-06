@@ -44,3 +44,16 @@ Further Configuration
 - **Secure Reports**
 
    Setup password protection for the `awstats-dh` directory via [DH's Htaccess Panel](https://panel.dreamhost.com/index.cgi?tree=advanced.webdav&).
+
+Troubleshooting
+---------------
+
+- **`update-awstats` fails or only partially updates stats**
+
+  By default, the `update-awstats` script process all available active logs (typically 3-30 days per site). If your shell user has a large number of sites, or very large logs, the script may be killed for excessive resource usage (on shared hosting). To avoid this problem, run the script with the `day` argument:
+  
+  ```
+  ~/example.com/awstats-dh/update-awstats day
+  ```
+  
+  In this mode, the script only looks at uncompressed log files for the last 24-48 hours (`access.log` and `access.log.0`), so it is faster and users fewer resources.
