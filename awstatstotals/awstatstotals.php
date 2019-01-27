@@ -91,6 +91,12 @@ $DirLang = $DirLang ?: '/usr/share/awstats/lang';
 $NotViewed = $NotViewed ?: 'sum';
 
 /**
+ * How to filter protocol
+ * Possible value: all, dom, https, http
+ */
+$prot_default = $prot_default ?: 'all';
+
+/**
  * How to sort.
  * Possible value:
  * config, unique, visits, pages, hits, bandwidth,
@@ -130,6 +136,7 @@ $sort  = isset($_GET['sort'])  ? preg_replace('/[^_a-z]/', '', $_GET['sort']) : 
 $year  = isset($_GET['year'])  ? (int)$_GET['year']  : date('Y');
 $month = isset($_GET['month']) ? (int)$_GET['month'] : date('n');
 $nview = isset($_GET['nview'])  ? $_GET['nview'] : $NotViewed;
+$prot  = isset($_GET['prot'])  ? $_GET['prot'] : $prot_default;
 
 $NotViewed = in_array($nview, ['none', 'sum', 'columns']) ? $nview : $NotViewed;
 
@@ -302,6 +309,41 @@ if ($files) {
     }
 }
 
+# Hash indexed by config name, for easy lookup
+$configs = array_column($rows, null, 'config');
+
+function prot_filter($row) {
+    global $prot, $configs, $NotViewed;
+
+    switch ($prot) {
+
+    case 'dom':
+    $paired_config = preg_match('/(.+)-http$/',  $row['config'], $matches)
+        ? $matches[1]
+        : $row['config'] . '-http';
+    return array_key_exists($paired_config, $configs)
+        ? $row['hits']
+          + ($NotViewed != 'sum' ? $row['not_viewed_hits']: 0)
+          >=
+          $configs[$paired_config]['hits']
+          + ($NotViewed != 'sum' ? $configs[$paired_config]['not_viewed_hits']: 0)
+        : true;
+
+    case 'http':
+    return preg_match('/(.+)-http$/',  $row['config']);
+
+    case 'https':
+    return !preg_match('/(.+)-http$/',  $row['config']);
+
+    case 'all':
+    default:
+        return true;
+
+    }
+}
+
+$rows = array_filter($rows, 'prot_filter');
+
 function multisort(&$array, $key) {
    $cmp = create_function('$a, $b',
        'if ($a["'.$key.'"] == $b["'.$key.'"]) return 0;'.
@@ -455,6 +497,12 @@ echo '</select>'."\n";
 <option value="sum"<?php echo $nview == 'sum' ? ' selected' : '' ?>>Combined Traffic
 <option value="columns"<?php echo $nview == 'columns' ? ' selected' : '' ?>>Detailed Traffic
 </select>
+<select class="f" name="prot">
+<option value="all"<?php echo $prot == 'all' ? ' selected' : '' ?>>All Protocols
+<option value="dom"<?php echo $prot == 'dom' ? ' selected' : '' ?>>Dominant Protocol
+<option value="https"<?php echo $prot == 'https' ? ' selected' : '' ?>>HTTPS Protocol
+<option value="http"<?php echo $prot == 'http' ? ' selected' : '' ?>>HTTP Protocol
+</select>
 <input type="submit" class="f" value="<?php echo $message[115]; ?>">
 </td></tr>
 </table>
@@ -476,7 +524,7 @@ case 'none': ?>
 <?php endswitch; ?>
 <tr>
 <?php
-$url = $_SERVER['SCRIPT_NAME']."?month=$month&year=$year&nview=$nview&sort=";
+$url = $_SERVER['SCRIPT_NAME']."?month=$month&year=$year&nview=$nview&prot=$prot&sort=";
 ?>
 <td bgcolor="#ECECEC" class="l" nowrap>&nbsp;<a href="<?php echo $url; ?>config" class="h"><?php echo $message[7]; ?></a>
 <td width="80" bgcolor="#FFB055"><a href="<?php echo $url; ?>unique" class="h"><?php echo $message[11]; ?></a>
