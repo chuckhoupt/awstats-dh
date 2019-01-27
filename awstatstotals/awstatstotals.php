@@ -275,18 +275,6 @@ if ($files) {
                 $row['hits'] += $row['not_viewed_hits'];
                 $row['bandwidth'] += $row['not_viewed_bandwidth'];
             }
-
-            $visits_total += $row['visits'];
-            $unique_total += $row['unique'];
-            $pages_total += $row['pages'];
-            $hits_total += $row['hits'];
-            $bandwidth_total += $row['bandwidth'];
-           
-            if ($NotViewed == 'columns') {
-                $not_viewed_pages_total += $row['not_viewed_pages'];
-                $not_viewed_hits_total += $row['not_viewed_hits'];
-                $not_viewed_bandwidth_total += $row['not_viewed_bandwidth'];
-            }
         }
         if ( isset($row['config']) && isset($row_prev['config']) && ($row['config'] == $row_prev['config']) ) {
 
@@ -343,6 +331,20 @@ function prot_filter($row) {
 }
 
 $rows = array_filter($rows, 'prot_filter');
+
+foreach ($rows as $row) {
+	$visits_total += $row['visits'];
+	$unique_total += $row['unique'];
+	$pages_total += $row['pages'];
+	$hits_total += $row['hits'];
+	$bandwidth_total += $row['bandwidth'];
+
+	if ($NotViewed == 'columns') {
+		$not_viewed_pages_total += $row['not_viewed_pages'];
+		$not_viewed_hits_total += $row['not_viewed_hits'];
+		$not_viewed_bandwidth_total += $row['not_viewed_bandwidth'];
+	}
+}
 
 function multisort(&$array, $key) {
    $cmp = create_function('$a, $b',
