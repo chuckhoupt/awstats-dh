@@ -569,5 +569,11 @@ echo "\n";
 <br><br><center><b>AWStats Totals 1.18</b> - <a
 href="http://www.telartis.nl/xcms/awstats">&copy; 2004-2010 Telartis BV</a></center><br><br>
 
+<script>
+document.querySelectorAll('select').forEach((select) => {
+	select.addEventListener('change', () => { document.forms[0].submit() })
+});
+document.querySelector('input').hidden = true;
+</script>
 </body>
 </html>
