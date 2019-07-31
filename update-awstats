@@ -38,8 +38,8 @@ do
 	esac
 	CONFIG_PATH=$CONFIGDIR/awstats.$CONFIG.conf
 	LOCAL_CONFIG_PATH=$BASE/awstats.$CONFIG.conf
-	LOGALLCMD="zcat -f $HOME/logs/$SITE/$PROTOCOL/access.log.2* $HOME/logs/$SITE/$PROTOCOL/access.log |"
-	LOGDAYCMD="zcat -f $HOME/logs/$SITE/$PROTOCOL/access.log.0 $HOME/logs/$SITE/$PROTOCOL/access.log |"
+	LOGALLCMD="cd $HOME/logs/$SITE/$PROTOCOL && zcat -f access.log.2* access.log |"
+	LOGDAYCMD="cd $HOME/logs/$SITE/$PROTOCOL && cat access.log.0 access.log |"
 
 	case ${1:-all} in
 	all) write_config "$LOGALLCMD" ;;
