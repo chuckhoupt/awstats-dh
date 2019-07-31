@@ -419,7 +419,7 @@ if (!$message) {
     $message[75]  = 'Bandwidth';
     $message[102] = 'Total';
     $message[115] = 'OK';
-    $message[133] = 'Reported period';
+    $message[133] = 'Reported parameters';
     $message[160] = 'Viewed traffic';
     $message[161] = 'Not viewed traffic';
 }
