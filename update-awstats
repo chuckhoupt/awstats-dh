@@ -10,6 +10,8 @@ BASE=$(pwd)
 CONFIGDIR=$BASE/cgi-bin
 DATADIR=$BASE/data
 
+LOGSDIR=$HOME/logs
+
 mkdir -p $DATADIR
 
 function write_config {
@@ -27,7 +29,7 @@ ENDCONFIG
 	fi
 }
 
-for LOG in $(find $HOME/logs/*/http{s,}/access.log -mtime -31)
+for LOG in $(find $LOGSDIR/*/http{s,}/access.log -mtime -31)
 do
 	[[ "$LOG" =~ logs/(.+)/(http|https) ]]
 	SITE=${BASH_REMATCH[1]}
@@ -38,9 +40,14 @@ do
 	esac
 	CONFIG_PATH=$CONFIGDIR/awstats.$CONFIG.conf
 	LOCAL_CONFIG_PATH=$BASE/awstats.$CONFIG.conf
-	LOGALLCMD="cd $HOME/logs/$SITE/$PROTOCOL && zcat -f access.log.2* access.log |"
-	LOGDAYCMD="cd $HOME/logs/$SITE/$PROTOCOL && cat access.log.0 access.log |"
-
+	if [ -f "$LOGSDIR/$SITE/$PROTOCOL/access.log.0" ]
+	then
+		LOGALLCMD="cd $LOGSDIR/$SITE/$PROTOCOL && zcat -f access.log{.2*,} |"
+		LOGDAYCMD="cd $LOGSDIR/$SITE/$PROTOCOL && cat access.log{.0,} |"
+	else
+		LOGALLCMD="cd $LOGSDIR/$SITE/$PROTOCOL && cat access.log |"
+		LOGDAYCMD="cd $LOGSDIR/$SITE/$PROTOCOL && cat access.log |"
+	fi
 	case ${1:-all} in
 	all) write_config "$LOGALLCMD" ;;
 	day) write_config "$LOGDAYCMD" ;;
