@@ -56,12 +56,12 @@
  * Set this value to the directory where AWStats
  * saves its database and working files into.
  */
-$DirData = $DirData ?: '/var/lib/awstats';
+$DirData = $DirData ?? '/var/lib/awstats';
 
 /**
  * The URL of the AWStats script.
  */
-$AWStatsURL = $AWStatsURL ?: '/cgi-bin/awstats.pl';
+$AWStatsURL = $AWStatsURL ?? '/cgi-bin/awstats.pl';
 
 /**
  * Set your language.
@@ -77,24 +77,24 @@ $AWStatsURL = $AWStatsURL ?: '/cgi-bin/awstats.pl';
  *  Welsh=wlk.
  *  First available language accepted by browser=auto
  */
-$Lang = $lang ?: 'auto';
+$Lang = $lang ?? 'auto';
 
 /**
  * Set the location of language files.
  */
-$DirLang = $DirLang ?: '/usr/share/awstats/lang';
+$DirLang = $DirLang ?? '/usr/share/awstats/lang';
 
 /**
  * How to display not viewed traffic
  * Possible value: ignore, columns, sum
  */
-$NotViewed = $NotViewed ?: 'sum';
+$NotViewed = $NotViewed ?? 'sum';
 
 /**
  * How to filter protocol
  * Possible value: all, dom, https, http
  */
-$prot_default = $prot_default ?: 'all';
+$prot_default = $prot_default ?? 'all';
 
 /**
  * How to sort.
@@ -102,18 +102,18 @@ $prot_default = $prot_default ?: 'all';
  * config, unique, visits, pages, hits, bandwidth,
  * not_viewed_pages, not_viewed_hits, not_viewed_bandwidth
  */
-$sort_default = $sort_default ?: 'bandwidth';
+$sort_default = $sort_default ?? 'bandwidth';
 
 /**
  * Set number format.
  */
-$dec_point = $dec_point ?: '.';
-$thousands_sep = $thousands_sep ?: ' ';
+$dec_point = $dec_point ?? '.';
+$thousands_sep = $thousands_sep ?? ' ';
 
 /**
  * Config names to filter. Shows all if empty array.
  */
-$FilterConfigs = $FilterConfigs ?: array();
+$FilterConfigs = $FilterConfigs ?? array();
 
 /*
 To read website configs from database, do something like:
@@ -126,7 +126,7 @@ if ($rs) while ($row = mysql_fetch_array($rs))
 /**
  * Config names to ignore.
  */
-$FilterIgnoreConfigs = $FilterIgnoreConfigs ?: array();
+$FilterIgnoreConfigs = $FilterIgnoreConfigs ?? array();
 
 /*******************************************************
  * PROGRAM SECTION
