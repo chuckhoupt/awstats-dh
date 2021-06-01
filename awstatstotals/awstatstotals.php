@@ -347,9 +347,10 @@ foreach ($rows as $row) {
 }
 
 function multisort(&$array, $key) {
-   $cmp = create_function('$a, $b',
-       'if ($a["'.$key.'"] == $b["'.$key.'"]) return 0;'.
-       'return ($a["'.$key.'"] > $b["'.$key.'"]) ? -1 : 1;');
+   $cmp = function($a, $b) use ($key) {
+       if ($a[$key] == $b[$key]) return 0;
+       return ($a[$key] > $b[$key]) ? -1 : 1;
+   };
    usort($array, $cmp);
 }
 
