@@ -362,7 +362,7 @@ if ($sort == 'config') {
 
 function detect_language($DirLang) {
     $Lang = '';
-    foreach (explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']) as $Lang) {
+    foreach (explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en') as $Lang) {
         $Lang = strtolower(trim(substr($Lang, 0, 2)));
         if (is_dir("$DirLang/awstats-$Lang.txt")) {
             break;
