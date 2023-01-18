@@ -45,6 +45,14 @@ Further Configuration
 
    Setup password protection for the `awstats-dh` directory via [DH's Htaccess Panel](https://panel.dreamhost.com/index.cgi?tree=advanced.webdav&).
 
+- **Upgrade AWStats-DH**
+
+   To upgrade to the latest version of AWStats-DH, pull from repository:
+
+   ```
+   git pull --recurse-submodules
+   ```
+
 Troubleshooting
 ---------------
 
