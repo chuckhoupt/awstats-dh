@@ -42,8 +42,8 @@ do
 	LOCAL_CONFIG_PATH=$BASE/awstats.$CONFIG.conf
 	if [ -f "$LOGSDIR/$SITE/$PROTOCOL/access.log.0" ]
 	then
-		LOGALLCMD="cd $LOGSDIR/$SITE/$PROTOCOL && zcat -f access.log{.2*,} |"
-		LOGDAYCMD="cd $LOGSDIR/$SITE/$PROTOCOL && cat access.log{.0,} |"
+		LOGALLCMD="cd $LOGSDIR/$SITE/$PROTOCOL && zcat -f access.log.2* access.log |"
+		LOGDAYCMD="cd $LOGSDIR/$SITE/$PROTOCOL && cat access.log.0 access.log |"
 	else
 		LOGALLCMD="cd $LOGSDIR/$SITE/$PROTOCOL && cat access.log |"
 		LOGDAYCMD="cd $LOGSDIR/$SITE/$PROTOCOL && cat access.log |"
